@@ -1,0 +1,29 @@
+{
+    "name": "fwt-js",
+    "version": "0.1.0",
+    "description": "fwt javascript implementation",
+    "main": "./src/index.js",
+    "module": "./src/index.js",
+    "scripts": {
+        "test": "node ./src/test.js",
+        "format": "prettier --write ."
+    },
+    "repository": "https://github.com/DeltaLaboratory/fwt-js",
+    "keywords": [],
+    "author": "delta <delta@deltalab.dev>",
+    "license": "MIT",
+    "packageManager": "pnpm@9.6.0",
+    "dependencies": {
+        "@noble/curves": "^1.4.2",
+        "@stablelib/xchacha20poly1305": "^2.0.0",
+        "aes-js": "^3.1.2",
+        "blakejs": "^1.2.1",
+        "cbor-x": "^1.6.0",
+        "hash-wasm": "^4.11.0"
+    },
+    "type": "module",
+    "devDependencies": {
+        "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+        "prettier": "3.3.3"
+    }
+}
