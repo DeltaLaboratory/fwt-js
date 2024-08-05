@@ -14,7 +14,7 @@ declare module "fwt-js" {
     export class Signer {
         constructor(
             signer: SignerFunc,
-            encryptor: EncryptorFunc,
+            encryptor: EncryptorFunc | null,
             signatureType: SignatureType,
         )
 
@@ -24,7 +24,7 @@ declare module "fwt-js" {
     export class Verifier {
         constructor(
             verifier: VerifierFunc,
-            decrypter: DecrypterFunc,
+            decrypter: DecrypterFunc | null,
             signatureType: SignatureType,
         )
 
@@ -48,16 +48,24 @@ declare module "fwt-js" {
     ): VerifierFunc
 
     export function newHMACSha256Signer(key: Uint8Array): Promise<SignerFunc>
-    export function newHMACSha256Verifier(key: Uint8Array): Promise<VerifierFunc>
+    export function newHMACSha256Verifier(
+        key: Uint8Array,
+    ): Promise<VerifierFunc>
 
     export function newHMACSha512Signer(key: Uint8Array): Promise<SignerFunc>
-    export function newHMACSha512Verifier(key: Uint8Array): Promise<VerifierFunc>
+    export function newHMACSha512Verifier(
+        key: Uint8Array,
+    ): Promise<VerifierFunc>
 
     export function newBlake2b256Signer(key: Uint8Array): Promise<SignerFunc>
-    export function newBlake2b256Verifier(key: Uint8Array): Promise<VerifierFunc>
+    export function newBlake2b256Verifier(
+        key: Uint8Array,
+    ): Promise<VerifierFunc>
 
     export function newBlake2b512Signer(key: Uint8Array): Promise<SignerFunc>
-    export function newBlake2b512Verifier(key: Uint8Array): Promise<VerifierFunc>
+    export function newBlake2b512Verifier(
+        key: Uint8Array,
+    ): Promise<VerifierFunc>
 
     export function newBlake3Signer(key: Uint8Array): Promise<SignerFunc>
     export function newBlake3Verifier(key: Uint8Array): Promise<VerifierFunc>
@@ -65,8 +73,12 @@ declare module "fwt-js" {
     type EncryptorFunc = (data: Uint8Array) => Promise<Uint8Array>
     type DecrypterFunc = (data: Uint8Array) => Promise<Uint8Array>
 
-    export function newXChaCha20PolyEncryptor(key: Uint8Array): Promise<EncryptorFunc>
-    export function newXChaCha20PolyDecrypter(key: Uint8Array): Promise<DecrypterFunc>
+    export function newXChaCha20PolyEncryptor(
+        key: Uint8Array,
+    ): Promise<EncryptorFunc>
+    export function newXChaCha20PolyDecrypter(
+        key: Uint8Array,
+    ): Promise<DecrypterFunc>
 
     export function newAESECBEncryptor(key: Uint8Array): Promise<EncryptorFunc>
     export function newAESECBDecrypter(key: Uint8Array): Promise<DecrypterFunc>

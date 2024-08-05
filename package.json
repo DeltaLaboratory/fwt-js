@@ -1,6 +1,6 @@
 {
     "name": "fwt-js",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "description": "fwt javascript implementation",
     "main": "./src/index.js",
     "module": "./src/index.js",
