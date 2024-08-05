@@ -192,13 +192,13 @@ function constantComparison(a, b) {
     return result === 0
 }
 
-export function newEd25519Signer(key) {
+export async function newEd25519Signer(key) {
     return async function (data) {
         return ed25519.sign(data, key)
     }
 }
 
-export function newEd25519Verifier(key) {
+export async function newEd25519Verifier(key) {
     return async function (data, sig) {
         if (ed25519.verify(sig, data, key, { zip215: false })) {
             return
@@ -207,13 +207,13 @@ export function newEd25519Verifier(key) {
     }
 }
 
-export function newEd448Signer(key, context = defaultCtx) {
+export async function newEd448Signer(key, context = defaultCtx) {
     return async function (data) {
         return ed448.sign(data, key, { context: context })
     }
 }
 
-export function newEd448Verifier(key, context = defaultCtx) {
+export async function newEd448Verifier(key, context = defaultCtx) {
     return async function (data, sig) {
         if (ed448.verify(sig, data, key, { context: context, zip215: false })) {
             return
@@ -338,7 +338,7 @@ export async function newBlake3Verifier(key) {
     }
 }
 
-export function newXChaCha20PolyEncryptor(key) {
+export async function newXChaCha20PolyEncryptor(key) {
     return async (data) => {
         const aead = new XChaCha20Poly1305(key)
         const nonce = randomBytes(aead.nonceLength)
@@ -350,7 +350,7 @@ export function newXChaCha20PolyEncryptor(key) {
     }
 }
 
-export function newXChaCha20PolyDecrypter(key) {
+export async function newXChaCha20PolyDecrypter(key) {
     return async (data) => {
         const aead = new XChaCha20Poly1305(key)
         if (data.length < aead.nonceLength) {
@@ -362,7 +362,7 @@ export function newXChaCha20PolyDecrypter(key) {
     }
 }
 
-export function newAESECBEncryptor(key) {
+export async function newAESECBEncryptor(key) {
     return async function (data) {
         const aesCbc = new aesjs.ModeOfOperation.ecb(key)
         const padded = pkcs7Pad(data, 16)
@@ -370,7 +370,7 @@ export function newAESECBEncryptor(key) {
     }
 }
 
-export function newAESECBDecrypter(key) {
+export async function newAESECBDecrypter(key) {
     return async function (data) {
         const aesCbc = new aesjs.ModeOfOperation.ecb(key)
         const decrypted = aesCbc.decrypt(data)
@@ -378,7 +378,7 @@ export function newAESECBDecrypter(key) {
     }
 }
 
-export function newAESCBCEncryptor(key) {
+export async function newAESCBCEncryptor(key) {
     return async function (data) {
         const iv = randomBytes(16)
         const aesCbc = new aesjs.ModeOfOperation.cbc(key, iv)
@@ -388,7 +388,7 @@ export function newAESCBCEncryptor(key) {
     }
 }
 
-export function newAESCBCDecrypter(key) {
+export async function newAESCBCDecrypter(key) {
     return async function (data) {
         const iv = data.slice(0, 16)
         const aesCbc = new aesjs.ModeOfOperation.cbc(key, iv)
@@ -397,7 +397,7 @@ export function newAESCBCDecrypter(key) {
     }
 }
 
-export function newAESCTREncryptor(key) {
+export async function newAESCTREncryptor(key) {
     return async function (data) {
         const nonce = randomBytes(16)
         const aesCtr = new aesjs.ModeOfOperation.ctr(
@@ -409,7 +409,7 @@ export function newAESCTREncryptor(key) {
     }
 }
 
-export function newAESCTRDecrypter(key) {
+export async function newAESCTRDecrypter(key) {
     return async function (data) {
         const nonce = data.slice(0, 16)
         const aesCtr = new aesjs.ModeOfOperation.ctr(
@@ -420,13 +420,13 @@ export function newAESCTRDecrypter(key) {
     }
 }
 
-export function newAESGCMEncryptor(key) {
+export async function newAESGCMEncryptor(key) {
     return async function (data) {
         throw new Error("not implemented: AES-GCM")
     }
 }
 
-export function newAESGCMDecrypter(key) {
+export async function newAESGCMDecrypter(key) {
     return async function (data) {
         throw new Error("not implemented: AES-GCM")
     }
