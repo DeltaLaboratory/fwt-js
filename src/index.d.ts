@@ -1,4 +1,4 @@
-declare module "fwt" {
+declare module "fwt-js" {
     export const defaultCtx: string
 
     export enum SignatureType {
