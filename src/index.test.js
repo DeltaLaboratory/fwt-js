@@ -348,7 +348,7 @@ describe("FWT JS Tests", () => {
     })
 
     // test encryption/decryption, use blake2b256 for testing
-    describe("Encryptor/Decryptor Tests", () => {
+    describe("Encryptor/Decrypter Tests", () => {
         test("XChaCha20Poly1305 Encrypt and Decrypt", async () => {
             const signer = new fwt.Signer(
                 await fwt.newBlake2b256Signer(byteKey),
