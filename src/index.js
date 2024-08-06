@@ -208,14 +208,18 @@ export async function newEd25519Verifier(key) {
 }
 
 export async function newEd448Signer(key, context = defaultCtx) {
+    const encoder = new TextEncoder()
+    const ctx = encoder.encode(context)
     return async function (data) {
-        return ed448.sign(data, key, { context: context })
+        return ed448.sign(data, key, { context: ctx })
     }
 }
 
 export async function newEd448Verifier(key, context = defaultCtx) {
+    const encoder = new TextEncoder()
+    const ctx = encoder.encode(context)
     return async function (data, sig) {
-        if (ed448.verify(sig, data, key, { context: context, zip215: false })) {
+        if (ed448.verify(sig, data, key, { context: ctx, zip215: false })) {
             return
         }
         throw new Error("Invalid signature")
@@ -338,7 +342,7 @@ export async function newBlake3Verifier(key) {
     }
 }
 
-export async function newXChaCha20PolyEncryptor(key) {
+export async function newXChaCha20Poly1305Encrypter(key) {
     return async (data) => {
         const aead = new XChaCha20Poly1305(key)
         const nonce = randomBytes(aead.nonceLength)
@@ -350,7 +354,7 @@ export async function newXChaCha20PolyEncryptor(key) {
     }
 }
 
-export async function newXChaCha20PolyDecrypter(key) {
+export async function newXChaCha20Poly1305Decrypter(key) {
     return async (data) => {
         const aead = new XChaCha20Poly1305(key)
         if (data.length < aead.nonceLength) {
@@ -362,7 +366,8 @@ export async function newXChaCha20PolyDecrypter(key) {
     }
 }
 
-export async function newAESECBEncryptor(key) {
+// You may be already know it: ECB mode is insecure. Use it only for demonstration purposes.
+export async function newAESECBEncrypter(key) {
     return async function (data) {
         const aesCbc = new aesjs.ModeOfOperation.ecb(key)
         const padded = pkcs7Pad(data, 16)
@@ -370,6 +375,7 @@ export async function newAESECBEncryptor(key) {
     }
 }
 
+// You may be already know it: ECB mode is insecure. Use it only for demonstration purposes.
 export async function newAESECBDecrypter(key) {
     return async function (data) {
         const aesCbc = new aesjs.ModeOfOperation.ecb(key)
@@ -378,56 +384,122 @@ export async function newAESECBDecrypter(key) {
     }
 }
 
-export async function newAESCBCEncryptor(key) {
+export async function newAESCBCEncrypter(key) {
+    const cryptoKey = await crypto.subtle.importKey(
+        "raw",
+        key,
+        { name: "AES-CBC" },
+        false,
+        ["encrypt"],
+    )
     return async function (data) {
         const iv = randomBytes(16)
-        const aesCbc = new aesjs.ModeOfOperation.cbc(key, iv)
         const padded = pkcs7Pad(data, 16)
-        const encrypted = aesCbc.encrypt(padded)
-        return new Uint8Array([...iv, ...encrypted])
+        const encrypted = await crypto.subtle.encrypt(
+            { name: "AES-CBC", iv },
+            cryptoKey,
+            padded,
+        )
+        return new Uint8Array([...iv, ...new Uint8Array(encrypted)])
     }
 }
 
 export async function newAESCBCDecrypter(key) {
+    const cryptoKey = await crypto.subtle.importKey(
+        "raw",
+        key,
+        { name: "AES-CBC" },
+        false,
+        ["decrypt"],
+    )
     return async function (data) {
         const iv = data.slice(0, 16)
-        const aesCbc = new aesjs.ModeOfOperation.cbc(key, iv)
-        const decrypted = aesCbc.decrypt(data.slice(16))
-        return pkcs7Unpad(decrypted)
+        const encrypted = data.slice(16)
+        const decrypted = await crypto.subtle.decrypt(
+            { name: "AES-CBC", iv },
+            cryptoKey,
+            encrypted,
+        )
+        return pkcs7Unpad(new Uint8Array(decrypted))
     }
 }
 
-export async function newAESCTREncryptor(key) {
+export async function newAESCTREncrypter(key) {
+    const cryptoKey = await crypto.subtle.importKey(
+        "raw",
+        key,
+        { name: "AES-CTR" },
+        false,
+        ["encrypt"],
+    )
     return async function (data) {
         const nonce = randomBytes(16)
-        const aesCtr = new aesjs.ModeOfOperation.ctr(
-            key,
-            new aesjs.Counter(nonce),
+        const encrypted = await crypto.subtle.encrypt(
+            { name: "AES-CTR", counter: nonce, length: 64 },
+            cryptoKey,
+            data,
         )
-        const encrypted = aesCtr.encrypt(data)
-        return new Uint8Array([...nonce, ...encrypted])
+        return new Uint8Array([...nonce, ...new Uint8Array(encrypted)])
     }
 }
 
 export async function newAESCTRDecrypter(key) {
+    const cryptoKey = await crypto.subtle.importKey(
+        "raw",
+        key,
+        { name: "AES-CTR" },
+        false,
+        ["decrypt"],
+    )
     return async function (data) {
         const nonce = data.slice(0, 16)
-        const aesCtr = new aesjs.ModeOfOperation.ctr(
-            key,
-            new aesjs.Counter(nonce),
+        const encrypted = data.slice(16)
+        const decrypted = await crypto.subtle.decrypt(
+            { name: "AES-CTR", counter: nonce, length: 64 },
+            cryptoKey,
+            encrypted,
         )
-        return aesCtr.decrypt(data.slice(16))
+        return new Uint8Array(decrypted)
     }
 }
 
-export async function newAESGCMEncryptor(key) {
-    return async function (data) {
-        throw new Error("not implemented: AES-GCM")
+export async function newAESGCMEncrypter(key) {
+    const cryptoKey = await crypto.subtle.importKey(
+        "raw",
+        key,
+        { name: "AES-GCM" },
+        false,
+        ["encrypt"],
+    )
+    return async function (data, aad = new Uint8Array(0), iv = null) {
+        const nonce = iv || randomBytes(12)
+        const encrypted = await crypto.subtle.encrypt(
+            { name: "AES-GCM", iv: nonce, additionalData: aad, tagLength: 128 },
+            cryptoKey,
+            data,
+        )
+        return new Uint8Array([...nonce, ...new Uint8Array(encrypted)])
     }
 }
 
 export async function newAESGCMDecrypter(key) {
-    return async function (data) {
-        throw new Error("not implemented: AES-GCM")
+    const cryptoKey = await crypto.subtle.importKey(
+        "raw",
+        key,
+        { name: "AES-GCM" },
+        false,
+        ["decrypt"],
+    )
+    return async function (data, aad = new Uint8Array(0)) {
+        const nonce = data.slice(0, 12)
+        const encrypted = data.slice(12)
+        const decrypted = await crypto.subtle.decrypt(
+            { name: "AES-GCM", iv: nonce, additionalData: aad, tagLength: 128 },
+            cryptoKey,
+            encrypted,
+        )
+        return new Uint8Array(decrypted)
     }
 }
+
+// TODO: add HPKE encryption/decryption functions

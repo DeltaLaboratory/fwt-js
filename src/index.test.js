@@ -63,7 +63,7 @@ describe("FWT JS Tests", () => {
         test("Ed25519 Sign and Verify with Encryption", async () => {
             const signer = new fwt.Signer(
                 await fwt.newEd25519Signer(ed25519PVK),
-                await fwt.newAESCTREncryptor(byteKey),
+                await fwt.newAESCTREncrypter(byteKey),
                 fwt.SignatureType.SignatureTypeEd25519,
             )
 
@@ -107,7 +107,7 @@ describe("FWT JS Tests", () => {
         test("Ed448 Sign and Verify with Encryption", async () => {
             const signer = new fwt.Signer(
                 await fwt.newEd448Signer(ed448PVK),
-                await fwt.newAESCTREncryptor(byteKey),
+                await fwt.newAESCTREncrypter(byteKey),
                 fwt.SignatureType.SignatureTypeEd448,
             )
 
@@ -151,7 +151,7 @@ describe("FWT JS Tests", () => {
         test("HMAC-SHA256 Sign and Verify with Encryption", async () => {
             const signer = new fwt.Signer(
                 await fwt.newHMACSha256Signer(byteKey),
-                await fwt.newAESCTREncryptor(byteKey),
+                await fwt.newAESCTREncrypter(byteKey),
                 fwt.SignatureType.SignatureTypeHMACSha256,
             )
 
@@ -195,7 +195,7 @@ describe("FWT JS Tests", () => {
         test("HMAC-SHA512 Sign and Verify with Encryption", async () => {
             const signer = new fwt.Signer(
                 await fwt.newHMACSha512Signer(byteKey),
-                await fwt.newAESCTREncryptor(byteKey),
+                await fwt.newAESCTREncrypter(byteKey),
                 fwt.SignatureType.SignatureTypeHMACSha512,
             )
 
@@ -239,7 +239,7 @@ describe("FWT JS Tests", () => {
         test("Blake2b256 Sign and Verify with Encryption", async () => {
             const signer = new fwt.Signer(
                 await fwt.newBlake2b256Signer(byteKey),
-                await fwt.newAESCTREncryptor(byteKey),
+                await fwt.newAESCTREncrypter(byteKey),
                 fwt.SignatureType.SignatureTypeBlake2b256,
             )
 
@@ -283,7 +283,7 @@ describe("FWT JS Tests", () => {
         test("Blake2b512 Sign and Verify with Encryption", async () => {
             const signer = new fwt.Signer(
                 await fwt.newBlake2b512Signer(byteKey),
-                await fwt.newAESCTREncryptor(byteKey),
+                await fwt.newAESCTREncrypter(byteKey),
                 fwt.SignatureType.SignatureTypeBlake2b512,
             )
 
@@ -327,7 +327,7 @@ describe("FWT JS Tests", () => {
         test("Blake3 Sign and Verify with Encryption", async () => {
             const signer = new fwt.Signer(
                 await fwt.newBlake3Signer(byteKey),
-                await fwt.newAESCTREncryptor(byteKey),
+                await fwt.newAESCTREncrypter(byteKey),
                 fwt.SignatureType.SignatureTypeBlake3,
             )
 
@@ -352,7 +352,7 @@ describe("FWT JS Tests", () => {
         test("XChaCha20Poly1305 Encrypt and Decrypt", async () => {
             const signer = new fwt.Signer(
                 await fwt.newBlake2b256Signer(byteKey),
-                await fwt.newXChaCha20Poly1305Encryptor(byteKey),
+                await fwt.newXChaCha20Poly1305Encrypter(byteKey),
                 fwt.SignatureType.SignatureTypeBlake2b256,
             )
 
@@ -372,7 +372,7 @@ describe("FWT JS Tests", () => {
         test("AES-ECB Encrypt and Decrypt", async () => {
             const signer = new fwt.Signer(
                 await fwt.newBlake2b256Signer(byteKey),
-                await fwt.newAESECBEncryptor(byteKey),
+                await fwt.newAESECBEncrypter(byteKey),
                 fwt.SignatureType.SignatureTypeBlake2b256,
             )
 
@@ -392,7 +392,7 @@ describe("FWT JS Tests", () => {
         test("AES-CBC Encrypt and Decrypt", async () => {
             const signer = new fwt.Signer(
                 await fwt.newBlake2b256Signer(byteKey),
-                await fwt.newAESCBCEncryptor(byteKey),
+                await fwt.newAESCBCEncrypter(byteKey),
                 fwt.SignatureType.SignatureTypeBlake2b256,
             )
 
@@ -412,7 +412,7 @@ describe("FWT JS Tests", () => {
         test("AES-CTR Encrypt and Decrypt", async () => {
             const signer = new fwt.Signer(
                 await fwt.newBlake2b256Signer(byteKey),
-                await fwt.newAESCTREncryptor(byteKey),
+                await fwt.newAESCTREncrypter(byteKey),
                 fwt.SignatureType.SignatureTypeBlake2b256,
             )
 
@@ -432,7 +432,7 @@ describe("FWT JS Tests", () => {
         test("AES-GCM Encrypt and Decrypt", async () => {
             const signer = new fwt.Signer(
                 await fwt.newBlake2b256Signer(byteKey),
-                await fwt.newAESGCMEncryptor(byteKey),
+                await fwt.newAESGCMEncrypter(byteKey),
                 fwt.SignatureType.SignatureTypeBlake2b256,
             )
 
