@@ -5,7 +5,9 @@
     "main": "./src/index.js",
     "module": "./src/index.js",
     "scripts": {
-        "test": "node ./src/test.js",
+        "test": "vitest run",
+        "test-watch": "vitest",
+        "coverage": "vitest --coverage",
         "format": "prettier --write ."
     },
     "repository": "https://github.com/DeltaLaboratory/fwt-js",
@@ -23,6 +25,8 @@
     "type": "module",
     "devDependencies": {
         "@trivago/prettier-plugin-sort-imports": "^4.3.0",
-        "prettier": "3.3.3"
+        "@vitest/coverage-v8": "^2.0.5",
+        "prettier": "3.3.3",
+        "vitest": "^2.0.5"
     }
 }
