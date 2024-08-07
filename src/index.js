@@ -1,15 +1,12 @@
 import { ed448 } from "@noble/curves/ed448"
 import { ed25519 } from "@noble/curves/ed25519"
+import { blake2b } from "@noble/hashes/blake2b"
+import { blake3 } from "@noble/hashes/blake3"
+import { hmac } from "@noble/hashes/hmac"
+import { sha256, sha512 } from "@noble/hashes/sha2"
 import { XChaCha20Poly1305 } from "@stablelib/xchacha20poly1305"
 import aesjs from "aes-js"
 import * as cbor from "cbor-x"
-import {
-    createBLAKE2b,
-    createBLAKE3,
-    createSHA256,
-    createSHA512,
-    createHMAC,
-} from "hash-wasm"
 
 export const defaultCtx = "github.com/DeltaLaboratory/fwt"
 
@@ -160,21 +157,15 @@ function randomBytes(length) {
 // hashKey hashes the key to the specified size using the specified algorithm.
 async function hashKey(key, size, algo = "blake2b") {
     if (algo === "blake2b") {
-        if (key.length >= size) {
-            return key
+        if (key.length > size) {
+            return blake2b(key, { dkLen: size })
         }
-        const hasher = await createBLAKE2b(size * 8)
-        hasher.init()
-        hasher.update(key)
-        return hasher.digest("binary")
+        return key
     } else if (algo === "blake3") {
         if (key.length === size) {
             return key
         }
-        const hasher = await createBLAKE3(size * 8)
-        hasher.init()
-        hasher.update(key)
-        return hasher.digest("binary")
+        return blake3(key, { dkLen: size })
     }
     throw new Error("Unsupported algorithm")
 }
@@ -227,20 +218,14 @@ export async function newEd448Verifier(key, context = defaultCtx) {
 }
 
 export async function newHMACSha256Signer(key) {
-    const hmac = await createHMAC(createSHA256(), key)
     return async function (data) {
-        hmac.init()
-        hmac.update(data)
-        return hmac.digest("binary")
+        return hmac(sha256, key, data)
     }
 }
 
 export async function newHMACSha256Verifier(key) {
-    const hmac = await createHMAC(createSHA256(), key)
     return async function (data, sig) {
-        hmac.init()
-        hmac.update(data)
-        const digest = hmac.digest("binary")
+        const digest = hmac(sha256, key, data)
         if (constantComparison(digest, sig)) {
             return
         }
@@ -249,20 +234,14 @@ export async function newHMACSha256Verifier(key) {
 }
 
 export async function newHMACSha512Signer(key) {
-    const hmac = await createHMAC(createSHA512(), key)
     return async function (data) {
-        hmac.init()
-        hmac.update(data)
-        return hmac.digest("binary")
+        return hmac(sha512, key, data)
     }
 }
 
 export async function newHMACSha512Verifier(key) {
-    const hmac = await createHMAC(createSHA512(), key)
     return async function (data, sig) {
-        hmac.init()
-        hmac.update(data)
-        const digest = hmac.digest("binary")
+        const digest = hmac(sha512, key, data)
         if (constantComparison(digest, sig)) {
             return
         }
@@ -272,21 +251,21 @@ export async function newHMACSha512Verifier(key) {
 
 export async function newBlake2b256Signer(key) {
     key = await hashKey(key, 64)
-    const hasher = await createBLAKE2b(32, key)
     return async function (data) {
-        hasher.init()
-        hasher.update(data)
-        return hasher.digest("binary")
+        return blake2b(data, {
+            key: key,
+            dkLen: 32,
+        })
     }
 }
 
 export async function newBlake2b256Verifier(key) {
     key = await hashKey(key, 64)
-    const hasher = await createBLAKE2b(32, key)
     return async function (data, sig) {
-        hasher.init()
-        hasher.update(data)
-        const digest = hasher.digest("binary")
+        const digest = blake2b(data, {
+            key: key,
+            dkLen: 32,
+        })
         if (constantComparison(digest, sig)) {
             return
         }
@@ -296,21 +275,21 @@ export async function newBlake2b256Verifier(key) {
 
 export async function newBlake2b512Signer(key) {
     key = await hashKey(key, 64)
-    const hasher = await createBLAKE2b(64, key)
     return async function (data) {
-        hasher.init()
-        hasher.update(data)
-        return hasher.digest("binary")
+        return blake2b(data, {
+            key: key,
+            dkLen: 64,
+        })
     }
 }
 
 export async function newBlake2b512Verifier(key) {
     key = await hashKey(key, 64)
-    const hasher = await createBLAKE2b(64, key)
     return async function (data, sig) {
-        hasher.init()
-        hasher.update(data)
-        const digest = hasher.digest("binary")
+        const digest = blake2b(data, {
+            key: key,
+            dkLen: 64,
+        })
         if (constantComparison(digest, sig)) {
             return
         }
@@ -320,21 +299,21 @@ export async function newBlake2b512Verifier(key) {
 
 export async function newBlake3Signer(key) {
     key = await hashKey(key, 32, "blake3")
-    const hasher = await createBLAKE3(256, key)
     return async function (data) {
-        hasher.init()
-        hasher.update(data)
-        return hasher.digest("binary")
+        return blake3(data, {
+            key: key,
+            dkLen: 32,
+        })
     }
 }
 
 export async function newBlake3Verifier(key) {
     key = await hashKey(key, 32, "blake3")
-    const hasher = await createBLAKE3(256, key)
     return async function (data, sig) {
-        hasher.init()
-        hasher.update(data)
-        const digest = hasher.digest("binary")
+        const digest = blake3(data, {
+            key: key,
+            dkLen: 32,
+        })
         if (constantComparison(digest, sig)) {
             return
         }

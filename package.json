@@ -1,6 +1,6 @@
 {
     "name": "fwt-js",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "fwt javascript implementation",
     "main": "./src/index.js",
     "module": "./src/index.js",
@@ -18,10 +18,10 @@
     "packageManager": "pnpm@9.6.0",
     "dependencies": {
         "@noble/curves": "^1.4.2",
+        "@noble/hashes": "^1.4.0",
         "@stablelib/xchacha20poly1305": "^2.0.0",
         "aes-js": "^3.1.2",
-        "cbor-x": "^1.6.0",
-        "hash-wasm": "^4.11.0"
+        "cbor-x": "^1.6.0"
     },
     "type": "module",
     "devDependencies": {
