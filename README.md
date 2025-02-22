@@ -1,5 +1,3 @@
-# FWT JS Implementation
+# Fast Web Token JS Implementation
 
-Go to original library's [README](https://github.com/DeltaLaboratory/fwt) for more information.
-
-But who cares ¯\_(ツ)\_/¯
+Go to golang library's [README](https://github.com/DeltaLaboratory/fwt) for more information.
