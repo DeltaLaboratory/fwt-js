@@ -1,6 +1,6 @@
 {
     "name": "@deltalaboratory/fwt",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "fast web token implementation",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
