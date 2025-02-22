@@ -13,7 +13,7 @@
         "emitDeclarationOnly": true,
         "rootDir": "./src",
         "outDir": "./dist",
-        "tsBuildInfoFile": "./dist"
+        "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo"
     },
     "include": ["src/**/*"]
 }
