@@ -1,0 +1,37 @@
+name: Publish Package
+
+permissions:
+    contents: read
+    packages: write
+    id-token: write
+
+on:
+    push:
+        tags:
+            - "v*"
+
+jobs:
+    build-and-publish:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Setup PNPM
+              uses: pnpm/action-setup@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: "pnpm"
+            - run: pnpm install --frozen-lockfile
+            - run: pnpm build
+            - name: Set GitHub Package Registry config
+              run: pnpm config set '//npm.pkg.github.com/:_authToken' "${NODE_AUTH_TOKEN}"
+              env:
+                  NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+            - name: Publish Packages to GitHub Package Registry
+              run: pnpm publish --provenance --access public --no-git-checks --registry https://npm.pkg.github.com
+            - name: Set NPM Registry config
+              run: pnpm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
+              env:
+                  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+            - name: Publish Packages to NPM
+              run: pnpm publish --provenance --access public --no-git-checks --registry https://registry.npmjs.org
