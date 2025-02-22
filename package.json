@@ -1,11 +1,14 @@
 {
     "name": "@deltalaboratory/fwt",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "fast web token implementation",
     "main": "./dist/index.js",
     "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "type": "module",
+    "files": [
+        "dist/**"
+    ],
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
