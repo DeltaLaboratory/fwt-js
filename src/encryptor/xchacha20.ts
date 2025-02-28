@@ -2,8 +2,8 @@ import { xchacha20poly1305 } from "@noble/ciphers/chacha"
 
 import {
     AuthenticationFailError,
-    type DecrypterFactory,
-    type DecrypterFunc,
+    type DecryptorFactory,
+    type DecryptorFunc,
     type EncryptorFactory,
     type EncryptorFunc,
     InvalidInputError,
@@ -12,7 +12,7 @@ import {
 } from "../types"
 import { getRandomValues } from "../utils/utils"
 
-export async function newXChaCha20Poly1305Encrypter(
+export async function newXChaCha20Poly1305Encryptor(
     key: Uint8Array,
 ): Promise<EncryptorFactory> {
     return async (): Promise<Result<EncryptorFunc>> => {
@@ -41,10 +41,10 @@ export async function newXChaCha20Poly1305Encrypter(
     }
 }
 
-export async function newXChaCha20Poly1305Decrypter(
+export async function newXChaCha20Poly1305Decryptor(
     key: Uint8Array,
-): Promise<DecrypterFactory> {
-    return async (): Promise<Result<DecrypterFunc>> => {
+): Promise<DecryptorFactory> {
+    return async (): Promise<Result<DecryptorFunc>> => {
         if (key.length != 32) {
             return {
                 ok: false,

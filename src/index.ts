@@ -1,8 +1,8 @@
 import { decode, encode } from "cbor-x"
 
 import {
-    type DecrypterFactory,
-    type DecrypterFunc,
+    type DecryptorFactory,
+    type DecryptorFunc,
     type EncryptorFactory,
     type EncryptorFunc,
     InvalidInputError,
@@ -161,12 +161,12 @@ export class Signer {
 export class Verifier {
     private readonly signatureType: SignatureType
     private readonly verifier: VerifierFunc
-    private readonly decrypter?: DecrypterFunc
+    private readonly decrypter?: DecryptorFunc
 
     private constructor(
         signatureType: SignatureType,
         verifier: VerifierFunc,
-        decrypter?: DecrypterFunc,
+        decrypter?: DecryptorFunc,
     ) {
         this.signatureType = signatureType
         this.verifier = verifier
@@ -175,7 +175,7 @@ export class Verifier {
 
     static async new(
         verifier: VerifierFactory,
-        decrypter?: DecrypterFactory,
+        decrypter?: DecryptorFactory,
     ): Promise<Result<Verifier>> {
         const verifierRet = await verifier()
         if (!verifierRet.ok) {

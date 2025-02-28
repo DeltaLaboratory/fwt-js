@@ -2,8 +2,8 @@ import { ed25519 } from "@noble/curves/ed25519"
 import { describe, expect, it } from "vitest"
 
 import {
-    newXChaCha20Poly1305Decrypter,
-    newXChaCha20Poly1305Encrypter,
+    newXChaCha20Poly1305Decryptor,
+    newXChaCha20Poly1305Encryptor,
 } from "./encryptor"
 import { Signer, Verifier } from "./index"
 import { newEd25519Signer, newEd25519Verifier } from "./signer"
@@ -82,14 +82,14 @@ describe("Signer and Verifier", () => {
         it("should sign, encrypt, decrypt, and verify data", async () => {
             const signer = await Signer.new(
                 await newEd25519Signer(signingKey),
-                await newXChaCha20Poly1305Encrypter(encryptionKey),
+                await newXChaCha20Poly1305Encryptor(encryptionKey),
             )
             expect(signer.ok).toBe(true)
             if (!signer.ok) return
 
             const verifier = await Verifier.new(
                 await newEd25519Verifier(ed25519.getPublicKey(signingKey)),
-                await newXChaCha20Poly1305Decrypter(encryptionKey),
+                await newXChaCha20Poly1305Decryptor(encryptionKey),
             )
             expect(verifier.ok).toBe(true)
             if (!verifier.ok) return
@@ -135,7 +135,7 @@ describe("Signer and Verifier", () => {
         it("should fail with wrong encryption key", async () => {
             const signer = await Signer.new(
                 await newEd25519Signer(signingKey),
-                await newXChaCha20Poly1305Encrypter(encryptionKey),
+                await newXChaCha20Poly1305Encryptor(encryptionKey),
             )
             expect(signer.ok).toBe(true)
             if (!signer.ok) return
@@ -143,7 +143,7 @@ describe("Signer and Verifier", () => {
             const wrongKey = new Uint8Array(32).fill(9)
             const verifier = await Verifier.new(
                 await newEd25519Verifier(signingKey),
-                await newXChaCha20Poly1305Decrypter(wrongKey),
+                await newXChaCha20Poly1305Decryptor(wrongKey),
             )
             expect(verifier.ok).toBe(true)
             if (!verifier.ok) return

@@ -35,5 +35,5 @@ export type VerifierFactory = () => Promise<
 export type EncryptorFunc = (data: Uint8Array) => Promise<Result<Uint8Array>>
 export type EncryptorFactory = () => Promise<Result<EncryptorFunc>>
 
-export type DecrypterFunc = (data: Uint8Array) => Promise<Result<Uint8Array>>
-export type DecrypterFactory = () => Promise<Result<DecrypterFunc>>
+export type DecryptorFunc = (data: Uint8Array) => Promise<Result<Uint8Array>>
+export type DecryptorFactory = () => Promise<Result<DecryptorFunc>>
