@@ -69,5 +69,12 @@ describe("base64URL", () => {
             const decoded = base64URLDecode(encoded)
             expect(decoded).toEqual(original)
         })
+
+        it("should decode test strings", () => {
+            const decoded = base64URLDecode(
+                "AIALpmRoYXNoWCB55JLBodMqCUn3ZXkBdGQ62mWGHIkdXx7m7gK6yTBaUWZsZW5ndGgaAQAAAGdleHBpcmVzGmfBGv1nZmlsZV9pZFABlUoafnZ8RZfT4tpsdkfEbWNvbGxlY3Rpb25faWRQAZVKGn5ze6yiqkUxd6tbInBzZWdtZW50X3NlcXVlbmNlALdZtQZ4D0nhBBTD2Kv_bjxzvbiAYxqUYSjEGRqRd0LtI5vXoqFRrmLriX1TTp-Eub1eai7e3Tf6Scr9oZJ5-ww",
+            )
+            expect(decoded).any
+        })
     })
 })
